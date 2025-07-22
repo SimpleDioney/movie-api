@@ -1,4 +1,3 @@
-// backend/db/database.js
 const sqlite3 = require('sqlite3');
 const { open } = require('sqlite');
 const path = require('path');
@@ -41,7 +40,6 @@ async function initializeDatabase() {
                 UNIQUE (user_id, tmdb_id)
             );
 
-            -- ✅ CORREÇÃO APLICADA AQUI --
             CREATE TABLE IF NOT EXISTS history (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
