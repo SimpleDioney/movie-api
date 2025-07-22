@@ -1,4 +1,3 @@
-// backend/routes/api.js (VERSÃO FINAL E CORRETA)
 
 const express = require('express');
 const router = express.Router();
@@ -28,7 +27,6 @@ module.exports = (db) => {
         }
     });
 
-    // Rota de busca genérica
     router.get('/search', async (req, res) => {
         const { query, type = 'multi', page = 1 } = req.query;
         if (!query) {
@@ -42,7 +40,6 @@ module.exports = (db) => {
         }
     });
     
-    // ✅ NOVA ROTA DE DISCOVERY COM FILTROS AVANÇADOS
     router.get('/discover/media', cache(3600), async (req, res) => {
         const {
             type = 'movie', // 'movie' ou 'tv'
@@ -57,12 +54,11 @@ module.exports = (db) => {
             page,
             sort_by: sortBy,
             'vote_average.gte': rating,
-            'vote_count.gte': 100, // Evita resultados com pouquíssimos votos
+            'vote_count.gte': 100, 
         };
 
         if (genreId) params.with_genres = genreId;
         
-        // TMDB usa 'primary_release_year' para filmes e 'first_air_date_year' para séries
         if (year) {
             if (type === 'movie') {
                 params.primary_release_year = year;
@@ -86,7 +82,6 @@ module.exports = (db) => {
                 tmdbApi.get('/genre/movie/list'),
                 tmdbApi.get('/genre/tv/list')
             ]);
-            // Combina e remove duplicatas (alguns gêneros têm mesmo ID e nome)
             const allGenres = [...movieGenres.data.genres, ...tvGenres.data.genres];
             const uniqueGenres = Array.from(new Map(allGenres.map(item => [item.id, item])).values());
             res.json(uniqueGenres);
@@ -198,7 +193,6 @@ module.exports = (db) => {
             return res.status(400).json({ message: 'Dados de histórico incompletos.' });
         }
 
-        // Garante que filmes tenham season/episode como 0 para a constraint
         const s_num = season_number || 0;
         const e_num = episode_number || 0;
 
