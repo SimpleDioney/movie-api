@@ -1,11 +1,9 @@
-// routes/auth.js
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 module.exports = (db) => {
-    // Rota de Cadastro: POST /auth/register
     router.post('/register', async (req, res) => {
         const { username, password } = req.body;
         if (!username || !password) {
@@ -30,7 +28,6 @@ module.exports = (db) => {
         }
     });
 
-    // Rota de Login: POST /auth/login
     router.post('/login', async (req, res) => {
         const { username, password } = req.body;
         if (!username || !password) {
@@ -48,7 +45,6 @@ module.exports = (db) => {
                 return res.status(401).json({ message: 'Credenciais inválidas.' });
             }
 
-            // Gerar o Token JWT
             const payload = { id: user.id, username: user.username };
             const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '7d' });
 
