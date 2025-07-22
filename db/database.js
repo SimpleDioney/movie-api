@@ -24,8 +24,12 @@ async function initializeDatabase() {
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
+                email TEXT UNIQUE NOT NULL,
                 password_hash TEXT NOT NULL,
-                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+                is_banned BOOLEAN DEFAULT FALSE,
+                reset_password_token TEXT,
+                reset_password_expires DATETIME
             );
 
             CREATE TABLE IF NOT EXISTS watchlist (

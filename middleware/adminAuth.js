@@ -1,9 +1,9 @@
-// middleware/auth.js
 const jwt = require('jsonwebtoken');
 
-function authMiddleware(req, res, next) {
+function adminAuthMiddleware(req, res, next) {
+    // Primeiro, verifica o token JWT como no middleware de autenticação normal
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Formato "Bearer TOKEN"
+    const token = authHeader && authHeader.split(' ')[1];
 
     if (token == null) {
         return res.status(401).json({ message: 'Acesso não autorizado: Token não fornecido.' });
@@ -14,10 +14,14 @@ function authMiddleware(req, res, next) {
             return res.status(403).json({ message: 'Acesso proibido: Token inválido.' });
         }
         
-        // Adiciona os dados do usuário (do token) ao objeto da requisição
+        // Agora, verifica se o usuário é o administrador
+        if (user.email !== process.env.ADMIN_EMAIL) {
+            return res.status(403).json({ message: 'Acesso proibido: Requer privilégios de administrador.' });
+        }
+
         req.user = user;
         next();
     });
 }
 
-module.exports = authMiddleware;
+module.exports = adminAuthMiddleware;
